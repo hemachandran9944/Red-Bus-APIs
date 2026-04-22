@@ -26,6 +26,121 @@ isTransport.verify((error, success) =>{
     }
 });
 
+            //BookingEmailMsg
+
+const BookingEmailMsg = async (bookingData) => {
+    const {
+        bookingRefCode,
+        passengerFullName,
+        passengerEmailAddress,
+        allocatedSeatNumber,
+        seatClassType,
+        journeyDeparturePoint,
+        journeyArrivalPoint,
+        journeyDepartureDate,
+        journeyArrivalDate,
+        amount,
+        paymentMethod,
+        paymentStatus
+    } = bookingData;
+
+    const departureTime = new Date(journeyDepartureDate).toLocaleString('en-IN', {
+        timeStyle: 'short',
+        dateStyle: 'long'
+    });
+
+    const arrivalTime = new Date(journeyArrivalDate).toLocaleString('en-IN', {
+        timeStyle: 'short',
+        dateStyle: 'long'
+    });
+
+
+    const BookingMsg = {
+        from: `Mugi Bus Services <${process.env.EMAIL}>`,
+        to:   passengerEmailAddress,
+        subject: `Booking Confirmed ✔ | ${bookingRefCode} | Mugi Bus Services`,
+
+        text: `
+================================================================
+             MUGI BUS SERVICES — BOOKING CONFIRMATION
+================================================================
+
+Dear ${passengerFullName},
+
+We are pleased to inform you that your bus ticket has been 
+successfully booked. Please find your trip details below.
+
+----------------------------------------------------------------
+                        BOOKING DETAILS
+----------------------------------------------------------------
+
+  Booking Reference   :  ${bookingRefCode}
+  Booking Status      :  CONFIRMED ✔
+
+----------------------------------------------------------------
+                         TRIP DETAILS
+----------------------------------------------------------------
+
+  From                :  ${journeyDeparturePoint}
+  To                  :  ${journeyArrivalPoint}
+  Departure           :  ${departureTime}
+  Arrival             :  ${arrivalTime}
+  Seat Number         :  ${allocatedSeatNumber}
+  Seat Class          :  ${seatClassType}
+
+----------------------------------------------------------------
+                       PAYMENT DETAILS
+----------------------------------------------------------------
+
+  Total Fare          :  ₹${amount}
+  Payment Method      :  ${paymentMethod}
+  Payment Status      :  ${paymentStatus}
+
+================================================================
+                        IMPORTANT NOTES
+================================================================
+
+  • Please arrive at the boarding point at least 15 minutes
+    before the scheduled departure time.
+
+  • Carry a valid government-issued photo ID proof during
+    your journey (Aadhaar / PAN / Passport / Driving Licence).
+
+  • Present this email or your Booking Reference Number
+    to the conductor at the time of boarding.
+
+  • Cancellations made 24 hours before departure are 
+    eligible for a full refund.
+
+  • For any assistance, please contact our support team.
+
+================================================================
+                        CONTACT SUPPORT
+================================================================
+
+  Email    :  hemachandranhema8754@gmail.com
+  Phone    :  +91 84288 01399
+  Hours    :  Monday - Saturday, 9:00 AM - 6:00 PM IST
+
+================================================================
+
+Thank you for choosing Mugi Bus Services.
+We wish you a safe, comfortable, and pleasant journey!
+
+Warm Regards,
+Team Mugi Bus Services
+© 2026 Mugi Bus Services. All rights reserved.
+
+================================================================
+        `
+    };
+
+    return await isTransport.sendMail(BookingMsg);
+};
+
+
+
+
 
 
 
@@ -80,5 +195,6 @@ const SendForgetPasswordOTP = async (name, email, otp ) => {
 
 module.exports = {
     SendRegisterOTP,
-    SendForgetPasswordOTP  
+    SendForgetPasswordOTP,
+    BookingEmailMsg  
 };

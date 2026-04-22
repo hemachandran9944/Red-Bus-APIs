@@ -57,6 +57,53 @@ exports.RegisterUser = async (req, res ) =>{
     }
 };
 
+                    //RegisterOtpVerify
+
+
+ exports.RegisterOtpVerify = async (req, res) => {
+    try {
+        const {email, otp} = req.body;
+        const VerifyRegOtp = await User.findOne({email});
+        if (!VerifyRegOtp) {
+            return res.status(404).json({
+                status: "Failed",
+                message: "User not found"
+            });
+        }
+
+        if (VerifyRegOtp.otp === otp) {
+            VerifyRegOtp.isVerified = true;
+            VerifyRegOtp.otp = null;
+            await VerifyRegOtp.save();
+            res.status(200).json({
+                status: "Success",
+                message: "Otp Verified successfulley! Now you can login."
+            });
+            
+            
+        } else {
+
+            res.status(400).json({
+                status: "Failed",
+                message: "Invalid  OTP! Please check you're email."
+            });
+            
+        }
+
+
+
+    } catch (error) {
+        
+        res.status(500).json({
+            error: error.message 
+        });
+        
+    }
+    
+ }
+
+
+
 
 
 
@@ -266,60 +313,22 @@ exports.AllUserDataDelete = async (req, res) => {
 };
 
 
+            // Logout API
+exports.LogOut  = async (req, res) => {
+    try {
 
+        res.status(200).json({
+            status: "Success",
+            message: "User session ended successfully"
+        });
+        
+    } catch (error) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        res.status(500).json({ error: error.message});
+        
+    }
+    
+}            
 
 
 

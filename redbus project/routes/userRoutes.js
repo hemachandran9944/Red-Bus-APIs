@@ -6,9 +6,11 @@ const userController = require ('../controllers/userController')
 
 
 router.post('/register', userController.RegisterUser);
+router.post('/register-otp-verify', userController.RegisterOtpVerify);
 router.post('/login', userController.LoginUesr);
 router.post('/reset-password-otp',userController.resetpassworsOtp);
 router.post('/resetPassword', userController.VeriyOtp);
+router.post('/logout', userController.LogOut);
 
 router.get('/UserProfile/:id', userController.SigleUser);
 router.get('/allUser', userController.GetAllUsers);
